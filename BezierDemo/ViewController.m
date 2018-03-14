@@ -97,6 +97,8 @@
 
 - (void)didPanGesture:(UIPanGestureRecognizer*)gesture
 {
+    CGPoint translation = [gesture translationInView:self.view];
+    CGFloat gestureX = kLeftViewWidth + translation.x;
     //根据手势获取曲线控制点
     NSArray<NSValue*> *points = [self getKeyPointsWithGesture:gesture];
     //根据曲线控制点生成n阶贝塞尔曲线
@@ -109,10 +111,12 @@
     CGPathMoveToPoint(path, NULL, 0, self.leftView.y);
     CGPathAddLineToPoint(path, NULL, kLeftViewWidth, self.leftView.y);
     CGPathAddPath(path, NULL, bpath.CGPath);
-    CGPathAddLineToPoint(path, NULL, kLeftViewWidth, self.leftView.maxY);
-    CGPathAddLineToPoint(path, NULL, kLeftViewWidth, self.leftView.y);
+    CGPathAddLineToPoint(path, NULL, 0, self.leftView.maxY);
+    CGPathAddLineToPoint(path, NULL, 0, self.leftView.y);
     CAShapeLayer *shape = [CAShapeLayer layer];
     shape.path = path;
+    CGPathRelease(path);
+    self.leftView.frame = CGRectMake(0, 0, MAX(gestureX, kLeftViewWidth), kScreenHeight);
     self.leftView.layer.mask = shape;
     
 }
