@@ -97,6 +97,10 @@
 
 - (void)didPanGesture:(UIPanGestureRecognizer*)gesture
 {
+    if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateFailed || gesture.state == UIGestureRecognizerStateCancelled) {
+        [self backAnimation:gesture];
+        return;
+    }
     CGPoint translation = [gesture translationInView:self.view];
     CGFloat gestureX = kLeftViewWidth + translation.x;
     //根据手势获取曲线控制点
@@ -153,6 +157,11 @@
     [pointArr addObject:[NSValue valueWithCGPoint:p2]];
     [pointArr addObject:[NSValue valueWithCGPoint:point3]];
     return pointArr;
+}
+
+- (void)backAnimation:(UIPanGestureRecognizer*)gesture
+{
+    
 }
 
 @end
